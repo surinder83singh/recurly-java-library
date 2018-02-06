@@ -878,8 +878,8 @@ public class TestRecurlyClient {
             Assert.assertTrue(pdfString.contains("Invoice # " + invoice.getId()));
             Assert.assertTrue(pdfString.contains("Subtotal $" + 1.5));
             // Attempt to close the invoice
-            final Invoice closedInvoice = recurlyClient.markInvoiceSuccessful(invoice.getId()).getChargeInvoice();
-            Assert.assertEquals(closedInvoice.getState(), "collected", "Invoice not closed successfully");
+            final Invoice closedInvoice = recurlyClient.markInvoiceSuccessful(invoice.getId());
+            Assert.assertEquals(closedInvoice.getState(), "paid", "Invoice not closed successfully");
 
         } finally {
             if (pdDocument != null) {
@@ -913,8 +913,8 @@ public class TestRecurlyClient {
             Assert.assertNotNull(invoice);
 
             // Attempt to close the invoice
-            final Invoice closedInvoice = recurlyClient.markInvoiceSuccessful(invoice.getId()).getChargeInvoice();
-            Assert.assertEquals(closedInvoice.getState(), "collected", "Invoice not closed successfully");
+            final Invoice closedInvoice = recurlyClient.markInvoiceSuccessful(invoice.getId());
+            Assert.assertEquals(closedInvoice.getState(), "paid", "Invoice not closed successfully");
 
             // Create an Adjustment
             final Adjustment b = new Adjustment();
@@ -931,7 +931,7 @@ public class TestRecurlyClient {
             Assert.assertNotNull(invoiceFail);
 
             // Attempt to fail the invoice
-            final Invoice failedInvoice = recurlyClient.markInvoiceFailed(invoiceFail.getId()).getChargeInvoice();
+            final Invoice failedInvoice = recurlyClient.markInvoiceFailed(invoiceFail.getId());
             Assert.assertEquals(failedInvoice.getState(), "failed", "Invoice not failed successfully");
 
             // Create an Adjustment
@@ -957,7 +957,7 @@ public class TestRecurlyClient {
 
             final Transaction externalPayment = recurlyClient.enterOfflinePayment(invoiceExternal.getId(), externalPaymentData);
             Assert.assertNotNull(externalPayment);
-            Assert.assertEquals(externalPayment.getInvoice().getState(), "collected", "Invoice not closed successfully");
+            Assert.assertEquals(externalPayment.getInvoice().getState(), "paid", "Invoice not closed successfully");
 
         } finally {
             // Close the account
